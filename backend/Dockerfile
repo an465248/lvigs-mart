@@ -1,13 +1,13 @@
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 RUN npm ci
 COPY . .
 RUN npx prisma generate
-RUN npm run build
+RUN NODE_OPTIONS="--max-old-space-size=512" npm run build
 
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 RUN addgroup -g 1001 -S lvigs && adduser -S lvigs -u 1001
