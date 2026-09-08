@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  opensearch:
+    ports:
+      - "9200:9200"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../Dockerfile
+      target: builder
+    command: npm run start:dev
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      DEV_OTP_LOG: "true"
+    ports:
+      - "4000:4000"
