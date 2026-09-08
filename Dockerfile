@@ -1,15 +1,15 @@
 # Stage 1: Build
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 RUN npm ci
 COPY . .
 RUN npx prisma generate
-RUN npm run build
+RUN NODE_OPTIONS="--max-old-space-size=512" npm run build
 
 # Stage 2: Production
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
